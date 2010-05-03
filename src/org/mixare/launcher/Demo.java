@@ -29,8 +29,11 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -90,7 +93,8 @@ public class Demo extends Activity {
 		{
 			//show the main screen 
 			setContentView(R.layout.home);
-
+			
+			
 			//show the button that launch mixare
 			final Button berge = (Button) findViewById(R.id.Button);
 			berge.setOnClickListener(new View.OnClickListener() {
@@ -182,9 +186,27 @@ public class Demo extends Activity {
 		//show GPS settings
 		if( !getLocationManager().isProviderEnabled(android.location.LocationManager.GPS_PROVIDER ) )
 		{
-			Toast.makeText( this, "Please turn on GPS", Toast.LENGTH_LONG ).show();
-			Intent myIntent = new Intent( Settings.ACTION_SECURITY_SETTINGS );
-			startActivity(myIntent);
+			Toast.makeText( this, "Please turn on GPS", Toast.LENGTH_LONG ).show();			
+			//Output device name
+			Log.d("device", Build.DEVICE);	
+			//Output model name of device (in this case only the firs 3 letters, which are "HTC")
+			Log.d("handy-model", Build.MODEL.substring(0, 3));
+			
+			//only for HTC HERO
+			/*if(Build.DEVICE.equals("hero")){
+				Intent myIntent = new Intent( Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+				startActivity(myIntent);
+			}*/
+			//for HTC devices
+			if(Build.MODEL.substring(0, 3).equals("HTC")){
+				Intent myIntent = new Intent( Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+				startActivity(myIntent);
+			}
+			//for other devices
+			else{
+				Intent myIntent = new Intent( Settings.ACTION_SECURITY_SETTINGS );
+				startActivity(myIntent);
+			}		
 		}
 	}
 	
